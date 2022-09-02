@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Chemia's ChemBlog</title>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'simplemde.min.css' %}">
+{% include 'navbar.html' %}
+{% block content %}
+{% endblock %}
+<!-- Bootstrap JS -->
+<script src="{% static 'bootstrap.min.js' %}"></script>
+<script src="{% static 'simplemde.min.js' %}"></script>
+<!-- Javascript start here -->
+{% block script %}
+{% endblock %}
+<!-- Javascript End -->
+</body>
+</html>

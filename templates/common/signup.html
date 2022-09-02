@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <form method="post" action="{% url 'common:signup' %}">
+        {% csrf_token %}
+        {% include 'form_errors.html' %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" class="form-control"
+                    value="{{ form.username.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="password1" class="form-label">Password</label>
+            <input type="password" id="password1" name="password1" class="form-control"
+                    value="{{ form.password1.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">Password confirmation</label>
+            <input type="password" id="password2" name="password2" class="form-control"
+                    value="{{ form.password2.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">email</label>
+            <input type="email" id="email" name="email" class="form-control"
+                    value="{{ form.email.value|default_if_none:'' }}">
+        </div>
+        <input type="submit" class="btn btn-primary" value="registration">
+    </form>
+</div>
+{% endblock %}

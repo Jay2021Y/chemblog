@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load chemblog_extra %}
+<div class="container my-3">
+    <div class="row my-3">
+        <div class="col-6">
+            <a href="{% url 'chemblog:post_create' %}" class="btn btn-primary">Create a New</a>
+        </div>
+        <div class="col-6">
+            <div class="input-group">
+                <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
+                <button class="btn btn-outline-secondary" type="button" id="btn_search">Search</button>
+            </div>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">No.</th>
+                <th scope="col">Subject</th>
+                <th scope="col">Username</th>
+                <th scope="col">Published</th>
+            </tr>
+        </thead>
+        {% if post_list %}
+        {% for post in post_list %}
+        <tbody>
+            <tr>
+                <th scope="row">
+                    {{ post_list.paginator.count|sub:post_list.start_index|sub:forloop.counter0|add:1 }}</th>
+                <td>
+                    <a href="{% url 'chemblog:post_detail' post.id %}">{{ post.subject }}</a>
+                    {% if post.comment_set.count > 0 %}
+                    <button type="button" class="btn btn-sm ms-5">
+                        comments<span class="badge text-bg-primary ms-2">{{ post.comment_set.count }}</span>
+                    </button>
+                    {% endif %}
+                </td>
+                <td>{{ post.author.username }}</td>
+                <td>{{ post.pub_date }}</td>
+            </tr>
+        </tbody>
+        {% endfor %}
+        {% else %}
+        <p>No posts are available</p>
+        {% endif %}
+    </table>
+    <nav class="my-3">
+        <ul class="pagination justify-content-center">
+            {% if post_list.has_previous %}
+            <li class="page-item"><a class="page-link" data-page="{{ post_list.previous_page_number }}"
+                href="javascript:void(0)">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" tabindex="-1">Previous</a></li>
+            {% endif %}
+            {% for page in post_list.paginator.page_range %}
+            {% if page >= post_list.number|add:'-5' and page <= post_list.number|add:'5' %}
+            {% if page == post_list.number %}
+            <li class="page-item active"><a class="page-link" data-page="{{ page }}"
+                href="javascript:void(0)">{{ page }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" data-page="{{ page }}"
+                href="javascript:void(0)">{{ page }}</a></li>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+            {% if post_list.has_next %}
+            <li class="page-item"><a class="page-link" data-page="{{ post_list.next_page_number }}"
+                href="javascript:void(0)">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" tabindex="-1">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+<form id="searchForm" method="get" action="{% url 'chemblog:index' %}">
+    <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+    <input type="hidden" id="page" name="page" value="{{ page }}">
+</form>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    const page_elements = document.getElementsByClassName('page-link');
+    Array.from(page_elements).forEach(function(element){
+        element.addEventListener('click', function(){
+            document.getElementById('page').value = this.dataset.page;
+            document.getElementById('searchForm').submit();
+        });
+    });
+    const btn_search = document.getElementById('btn_search');
+    btn_search.addEventListener('click', function() {
+        document.getElementById('kw').value = document.getElementById('search_kw').value;
+        document.getElementById('page').value = 1;
+        document.getElementById('searchForm').submit();
+    });
+</script>
+{% endblock %}

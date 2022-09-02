@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-3">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            <div>
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 오류표시 End -->
+
+        <div class="mb-3">
+            <label for="subject" class="form-label">Title</label>
+            <input type="text" class="form-control" id="subject" name="subject"
+                    value="{{ form.subject.value|default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea id="content" class="form-control" name="content" rows="20">{{ form.content.value|default_if_none:'' }}</textarea>
+        </div>
+        <input type="submit" class="btn btn-primary my-3" value="Submit">
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+
+<!-- simplemde editor -->
+<script>
+    var simplemde = new SimpleMDE({ element: document.getElementById("content") });
+</script>
+{% endblock %}
