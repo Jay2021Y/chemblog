@@ -37,8 +37,14 @@ def post_detail(request, post_id):
             comment.post_id = post.id
             comment.save()
             return redirect('{}#comment_{}'.format(resolve_url('chemblog:post_detail', post_id=post.id), comment.id))
-
-    return render(request, 'chemblog/post_detail.html', {'post': post})
+    comment_list = post.comment_set.all().order_by('-pub_date')
+    # comment_list = Comment.objects.order_by('-pub_date') 로 코딩하는 실수를 하여
+    # 각각의 post entry 마다 모든 comment 객체가 나타났었음
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(comment_list, 10)
+    page_obj = paginator.get_page(page_number)
+    context = {'post': post, 'page_obj': page_obj}
+    return render(request, 'chemblog/post_detail.html', context)
 
 
 @login_required(login_url='common:login')
@@ -75,7 +81,7 @@ def post_modify(request, post_id):
         form = PostForm(instance=post)
     # 만약 여기서 else를 생략하면 form.is_valid()가 False인 경우에도 템플릿에서 구현한 오류 메시지가 나타나지 않는다.
     # 그 이유는 form.is_valid()가 False 이면 form = PostForm(instance=post)가 렌더링 되기 때문이다.
-    # 즉 else 가 있다면 당연히 form = PostForm(instance=post)을 건너뛰고 그 아래의 return 구문을 실행한다는 뜻이다.
+    # 하지만 else 가 있다면 당연히 form = PostForm(instance=post)을 건너뛰고 그 아래의 return 구문을 실행한다는 뜻이다.
     return render(request, 'chemblog/post_form.html', {'form': form})
 
 
@@ -103,8 +109,17 @@ def post_vote(request, post_id):
 def comment_vote(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     if request.user == comment.author:
-        messages.error(request, "Cannot make recommendation for one's own comment")
+        messages.error(request, "Cannot make recommendation for your own comment")
     else:
         comment.voter.add(request.user)
-    return redirect('chemblog:post_detail', post_id=comment.post.id)
+    return redirect('{}#comment_{}'.format(resolve_url('chemblog:post_detail', post_id=comment.post.id), comment.id))
 
+
+@login_required(login_url='common:login')
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, 'You are not authorized to remove this comment')
+    else:
+        comment.delete()
+    return redirect('chemblog:post_detail', post_id=comment.post.id)
