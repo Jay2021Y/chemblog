@@ -130,3 +130,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'chemblog:index'
 LOGOUT_REDIRECT_URL = 'chemblog:index'
 LOGIN_URL = 'common:login'
+
+SESSION_COOKIE_AGE = 1200
+SESSION_SAVE_EVERY_REQUEST = True
