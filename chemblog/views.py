@@ -37,7 +37,11 @@ def post_detail(request, post_id):
             comment.post_id = post.id
             comment.save()
             return redirect('{}#comment_{}'.format(resolve_url('chemblog:post_detail', post_id=post.id), comment.id))
-    comment_list = post.comment_set.all().order_by('-pub_date')
+    # Sort by
+    if request.GET.get('sortby') == 'best':
+        comment_list = post.comment_set.all().order_by('-voter')
+    else:
+        comment_list = post.comment_set.all().order_by('-pub_date')
     # comment_list = Comment.objects.order_by('-pub_date') 로 코딩하는 실수를 하여
     # 각각의 post entry 마다 모든 comment 객체가 나타났었음
     page_number = request.GET.get('page', 1)
