@@ -48,7 +48,36 @@ def post_detail(request, post_id):
     paginator = Paginator(comment_list, 10)
     page_obj = paginator.get_page(page_number)
     context = {'post': post, 'page_obj': page_obj}
-    return render(request, 'chemblog/post_detail.html', context)
+    response = render(request, 'chemblog/post_detail.html', context)
+
+    # hits number representing by using cookie
+    cookie_value = request.COOKIES.get('hitsnumber', '_')
+    max_age = 24 * 60 * 60
+
+    # increment of hits number for post depending on each authenticateed(= being login) user
+    if request.user.username not in cookie_value:
+        if request.user.is_authenticated:
+            cookie_value += f'{request.user.username}_'
+            post.hits += 1
+        else:
+            if f'_{post_id}_' not in cookie_value:
+                cookie_value += f'{post_id}_'
+                post.hits += 1
+
+        post.save()
+        response.set_cookie('hitsnumber', value=cookie_value, httponly=True)
+
+    return response
+
+    # user 관계없이 조회수 설정할 경우의 코드
+    '''if f'_{post_id}_' not in cookie_value:
+        cookie_value += f'{post_id}_'
+        response.set_cookie('hitsnumber', value=cookie_value, httponly=True)
+        post.hits += 1
+        # post.hits = F('hits') + 1 코드로 동일한 결과를 얻지만, 데이터베이스상에서 처리하므로 메모리를 사용치 않는다고 함
+        post.save()
+
+    return response'''
 
 
 @login_required(login_url='common:login')

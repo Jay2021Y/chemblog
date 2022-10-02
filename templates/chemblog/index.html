@@ -20,6 +20,7 @@
                 <th scope="col">Subject</th>
                 <th scope="col">Username</th>
                 <th scope="col">Published</th>
+                <th scope="col">Visited</th>
             </tr>
         </thead>
         {% if post_list %}
@@ -38,6 +39,7 @@
                 </td>
                 <td>{{ post.author.username }}</td>
                 <td>{{ post.pub_date }}</td>
+                <td>{{ post.hits }}</td>
             </tr>
         </tbody>
         {% endfor %}
