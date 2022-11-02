@@ -54,7 +54,7 @@ def post_detail(request, post_id):
     cookie_value = request.COOKIES.get('hitsnumber', '_')
     max_age = 24 * 60 * 60
 
-    # increment of hits number for post depending on each authenticateed(= being login) user
+    # increment of hits number for a post by each authenticated(= being login) user
     if request.user.username not in cookie_value:
         if request.user.is_authenticated:
             cookie_value += f'{request.user.username}_'

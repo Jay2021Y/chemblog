@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('chemblog/', include('chemblog.urls')),
     path('common/', include('common.urls')),
-    #path('common/', include('django.contrib.auth.urls')),
+    path('socialaccounts/', include('allauth.urls')),
 ]

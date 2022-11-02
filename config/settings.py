@@ -52,6 +52,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # provider
+    'allauth.socialaccount.providers.google',
+    # id : 862287357265-pd1eno60ge2phrjeikqb0funv83j31q0.apps.googleusercontent.com
+    # pw : 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
 ]
 
 MIDDLEWARE = [
@@ -139,6 +150,13 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+)
+
+SITE_ID = 1
 
 LOGIN_REDIRECT_URL = 'chemblog:index'
 LOGOUT_REDIRECT_URL = 'chemblog:index'
