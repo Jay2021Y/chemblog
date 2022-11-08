@@ -1,10 +1,11 @@
-from django.urls import path, include
+from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
 app_name = 'common'
 
 urlpatterns = [
+    path('user_profile/', views.user_profile, name='user_profile'),
     path('signup_kakao/<str:access_token>/', views.signup_kakao, name='signup_kakao'),
     path('login/', auth_views.LoginView.as_view(template_name='common/login.html'), name='login'),
     path('kakaologin/', views.kakaologin, name='kakaologin'),

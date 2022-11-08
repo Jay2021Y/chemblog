@@ -94,3 +94,14 @@ def signup_kakao(request, access_token):
     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
     return redirect('chemblog:index')
+
+
+def user_profile(request):
+    user = User.objects.get(id=request.user.id)
+    user_post = user.author_post.all()
+    user_comment = user.author_comment.all()
+    context = {
+        'user_post': user_post,
+        'user_comment': user_comment
+    }
+    return render(request, 'common/user_profile.html', context)

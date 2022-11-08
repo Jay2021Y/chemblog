@@ -162,7 +162,7 @@ LOGIN_REDIRECT_URL = 'chemblog:index'
 LOGOUT_REDIRECT_URL = 'chemblog:index'
 LOGIN_URL = 'common:login'
 
-SESSION_COOKIE_AGE = 1200
+SESSION_COOKIE_AGE = 2*60*60
 SESSION_SAVE_EVERY_REQUEST = True
 
 # email
