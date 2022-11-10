@@ -7,9 +7,8 @@ from urllib.request import Request
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 
-from config import settings
+from config.settings import base
 from .forms import UserForm
-from django.http import HttpResponse
 from .urlopen_try_except import urlopen_request
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -30,11 +29,11 @@ def signup(request):
     return render(request, 'common/signup.html', {'form': form})
 
 
-secret_file = os.path.join(settings.BASE_DIR, 'secrets.json')
+secret_file = os.path.join(base.BASE_DIR, 'secrets.json')
 with open(secret_file) as f:
     secrets = json.loads(f.read())
 
-client_id = settings.get_secret('client_id')
+client_id = base.get_secret('client_id')
 redirect_uri = 'http://127.0.0.1:8000/common/kakaocallback'
 
 
