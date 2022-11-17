@@ -23,3 +23,5 @@ urlpatterns = [
     path('common/', include('common.urls')),
     path('socialaccounts/', include('allauth.urls')),
 ]
+
+handler404 = 'common.views.page_not_found'

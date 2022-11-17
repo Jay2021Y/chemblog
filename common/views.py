@@ -104,3 +104,8 @@ def user_profile(request):
         'user_comment': user_comment
     }
     return render(request, 'common/user_profile.html', context)
+
+
+def page_not_found(request, exception):
+    return render(request, 'common/404.html', {})
+
