@@ -198,7 +198,7 @@ LOGGING = {
         },
         'standard': {
             'format': '%(acstime)s [%(levelname)s] %(name)s: %(message)s'
-        }
+        },
     },
     "handlers": {
         "console": {
@@ -223,7 +223,7 @@ LOGGING = {
             'filename': BASE_DIR / 'logs/chemia.log',
             'maxBytes': 1024*1024*5,
             'backupCount': 5,
-            'formatter': 'standard'
+            'formatter': 'standard',
 
         }
     },
