@@ -9,6 +9,7 @@ from django.db.models import Q
 
 
 def index(request):
+    3/0
     page_number = request.GET.get('page', '1')
     kw = request.GET.get('kw', '')
     post_list = Post.objects.order_by('-pub_date')
