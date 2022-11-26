@@ -237,7 +237,7 @@ LOGGING = {
             'propagate': False,
         },
         'chemblog': {
-            'habdlers': ['console', 'file'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
         },
     },
