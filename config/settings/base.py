@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 import json
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
@@ -34,6 +36,12 @@ def get_secret(setting, secrects=secrets):
     except KeyError:
         error_msg = "Set the {} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
+
+
+def update_secret(key, value):
+    secrets[key] = value
+    with open(secret_file, 'w') as outfile:
+        json.dump(secrets, outfile, indent=1)
 
 
 SECRET_KEY = get_secret('SECRET_KEY')
