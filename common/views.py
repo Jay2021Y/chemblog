@@ -36,16 +36,20 @@ with open(secret_file) as f:
     secrets = json.loads(f.read())
 
 
-def kakao_redirect(env):
-    local = 'http://127.0.0.1:8000/common/kakaocallback'
-    prod = 'https://chemia.kr/common/kakaocallback'
-    return local if env == 'local' else prod
-    # 아래 kakaologin 뷰함수에서 request.get_host()[:4] 식으로 슬라이싱 하여 'local'만 뽑아 낸뒤 위의 if 문에 적용해보자
+def redirect_sociallogin(env, provider):
+    local = 'http://127.0.0.1:8000/common/'
+    prod = 'https://chemia.kr/common/'
+    if provider == 'kakao':
+        path = 'kakaocallback'
+    elif provider == 'naver':
+        path = 'navercallback'
+    return local if env == 'local' else prod, path
 
 
 def kakaologin(request):
     client_id = base.get_secret('client_id_kakao')
-    redirect_uri = kakao_redirect(request.get_host()[:5])
+    host_with_protocol, path = redirect_sociallogin(request.get_host()[:5], 'kakao')
+    redirect_uri = host_with_protocol + path
     url = f'https://kauth.kakao.com/oauth/authorize' \
           f'?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}'
     return redirect(url)
@@ -53,7 +57,8 @@ def kakaologin(request):
 
 def kakaocallback(request, headers=None):
     client_id = base.get_secret('client_id_kakao')
-    redirect_uri = kakao_redirect(request.get_host()[:5])
+    host_with_protocol, path = redirect_sociallogin(request.get_host()[:5], 'kakao')
+    redirect_uri = host_with_protocol + path
     code = request.GET.get('code')
     print(code)
     url = 'https://kauth.kakao.com/oauth/token'
@@ -103,7 +108,8 @@ def signup_kakao(request, access_token):
 
 def naverlogin(request):
     client_id = base.get_secret('client_id_naver')
-    redirect_uri = 'http://127.0.0.1:8000/common/navercallback'
+    host_with_protocol, path = redirect_sociallogin(request.get_host()[:5], 'naver')
+    redirect_uri = host_with_protocol + path
     urlencoded_redirect_uri = quote(redirect_uri)
     state_stirng = request.POST.get('csrfmiddlewaretoken')
 
@@ -162,7 +168,8 @@ def signup_naver(request, access_token):
 
 def naverlogin_reprompt(request):
     client_id = base.get_secret('client_id_naver')
-    redirect_uri = 'http://127.0.0.1:8000/common/navercallback'
+    host_with_protocol, path = redirect_sociallogin(request.get_host()[:5], 'naver')
+    redirect_uri = host_with_protocol + path
     urlencoded_redirect_uri = quote(redirect_uri)
     state_string = request.POST.get('csrfmiddlewaretoken')
 
