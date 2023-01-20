@@ -38,7 +38,7 @@ with open(secret_file) as f:
 
 def kakao_redirect(env):
     local = 'http://127.0.0.1:8000/common/kakaocallback'
-    prod = 'https://chemia.kr/chemblog/kakaocallback'
+    prod = 'https://chemia.kr/common/kakaocallback'
     return local if env == 'local' else prod
     # 아래 kakaologin 뷰함수에서 request.get_host()[:4] 식으로 슬라이싱 하여 'local'만 뽑아 낸뒤 위의 if 문에 적용해보자
 
