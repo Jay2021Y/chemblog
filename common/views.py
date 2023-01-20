@@ -36,9 +36,16 @@ with open(secret_file) as f:
     secrets = json.loads(f.read())
 
 
+def kakao_redirect(env):
+    local = 'http://127.0.0.1:8000/common/kakaocallback'
+    prod = 'https://chemia.kr/chemblog/kakaocallback'
+    return local if env == 'local' else prod
+    # 아래 kakaologin 뷰함수에서 request.get_host()[:4] 식으로 슬라이싱 하여 'local'만 뽑아 낸뒤 위의 if 문에 적용해보자
+
+
 def kakaologin(request):
     client_id = base.get_secret('client_id_kakao')
-    redirect_uri = 'http://127.0.0.1:8000/common/kakaocallback'
+    redirect_uri = kakao_redirect(request.get_host()[:5])
     url = f'https://kauth.kakao.com/oauth/authorize' \
           f'?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}'
     return redirect(url)
@@ -46,7 +53,7 @@ def kakaologin(request):
 
 def kakaocallback(request, headers=None):
     client_id = base.get_secret('client_id_kakao')
-    redirect_uri = 'http://127.0.0.1:8000/common/kakaocallback'
+    redirect_uri = kakao_redirect(request.get_host()[:5])
     code = request.GET.get('code')
     print(code)
     url = 'https://kauth.kakao.com/oauth/token'

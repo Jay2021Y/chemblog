@@ -14,7 +14,6 @@ logger = logging.getLogger('chemblog')
 
 
 def index(request):
-    env = os.environ['DJANGO_SETTINGS_MODULE']
     logger.info('INFO level message')
     page_number = request.GET.get('page', '1')
     kw = request.GET.get('kw', '')
@@ -29,7 +28,7 @@ def index(request):
         ).distinct()  # 하나의 포스트에 달린 복수의 댓글이 모두 검색조건에 해당하는 경우, 검색결과에 동일한 포스트가 반복되어 표시되므로 중복을 제거하기 위함
     paginator = Paginator(post_list, 10)
     page_obj = paginator.get_page(page_number)
-    context = {'post_list': page_obj, 'page': page_number, 'kw': kw, 'env': env}
+    context = {'post_list': page_obj, 'page': page_number, 'kw': kw}
     return render(request, 'chemblog/index.html', context)
 
 
