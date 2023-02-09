@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 import logging
+from pprint import pprint
 
 import os
 
@@ -33,6 +34,7 @@ def index(request):
 
 
 def post_detail(request, post_id):
+    print(type(request.user.username))
     post = get_object_or_404(Post, pk=post_id)
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -63,7 +65,7 @@ def post_detail(request, post_id):
     # increment of hits number for a post by each authenticated(= being login) user
     if request.user.username not in cookie_value:
         if request.user.is_authenticated:
-            cookie_value += f'{request.user.username}_'
+            cookie_value += f"{request.user.username.encode('utf-8')}_"
             post.hits += 1
         else:
             if f'_{post_id}_' not in cookie_value:
