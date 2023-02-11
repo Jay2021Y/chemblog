@@ -149,6 +149,8 @@ def navercallback(request):
         response = inner_urlopen(url, data)
         access_token = response['access_token']
         return redirect('common:signup_naver', access_token)
+    else:
+        return render(request, 'common/400.html')
 
 
 def signup_naver(request, access_token):
