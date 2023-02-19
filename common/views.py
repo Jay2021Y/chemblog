@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from pprint import pprint
 from urllib.parse import urlencode, quote
@@ -13,7 +14,9 @@ from .forms import UserForm
 from .urlopen_try_except import urlopen_request
 from .social_user_signup import social_user_signup
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
+import logging
+
+logger = logging.getLogger('chemblog')
 
 
 def signup(request):
@@ -138,6 +141,7 @@ def navercallback(request):
     csrf_token = base.get_secret('state')
     # 위의 토큰 값과 콜백으로 전달 받은 토큰값 일치 여부
     if csrf_token == request.GET.get('state'):
+        logger.info(csrf_token, request.GET.get('state'))
         url = 'https://nid.naver.com/oauth2.0/token'
         params = {
             'grant_type': 'authorization_code',
