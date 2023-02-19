@@ -140,7 +140,7 @@ def navercallback(request):
     # 네이버 로그인 버튼을 눌렀을 때 전달된 csrf token
     csrf_token = base.get_secret('state')
 
-    logger.info(csrf_token, request.GET.get('state'))
+    logger.info('Is this working?')
 
     # 위의 토큰 값과 콜백으로 전달 받은 토큰값 일치 여부
     if csrf_token == request.GET.get('state'):
