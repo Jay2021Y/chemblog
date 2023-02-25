@@ -116,9 +116,10 @@ def naverlogin(request):
     urlencoded_redirect_uri = quote(redirect_uri)
     state_stirng = request.POST.get('csrfmiddlewaretoken')
 
-    logger.info(f'state_stirng: {state_stirng}')
-
     base.update_secret('state', state_stirng)
+
+    csrf_token = base.get_secret('state')
+    logger.info(f'{state_stirng} from GET, {csrf_token} from secrets.json')
 
     url_naverlogin = f'https://nid.naver.com/oauth2.0/authorize?response_type=code&' \
                      f'client_id={client_id}&state={state_stirng}&redirect_uri={urlencoded_redirect_uri}'
