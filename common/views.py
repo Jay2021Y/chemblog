@@ -140,6 +140,7 @@ def inner_urlopen(url, data):
 
 
 def navercallback(request):
+    from config.settings import base
     # 네이버 로그인 버튼을 눌렀을 때 전달된 csrf token
     csrf_token = base.get_secret('state')
 
